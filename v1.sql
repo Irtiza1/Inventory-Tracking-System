@@ -2,24 +2,27 @@
 -- Stage 1: Single Store Model
 -- ==========================
 
-CREATE TABLE Product (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    sku VARCHAR(50) UNIQUE NOT NULL,
+-- Create Products Table
+CREATE TABLE IF NOT EXISTS Products (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    product_code TEXT UNIQUE NOT NULL,  -- More descriptive than SKU
     price DECIMAL(10,2) NOT NULL,
-    initial_quantity INT NOT NULL DEFAULT 0, -- Tracks first quantity added
-    current_quantity INT NOT NULL DEFAULT 0, -- Updated when stock moves
+    initial_quantity INTEGER NOT NULL DEFAULT 0,
+    available_quantity INTEGER NOT NULL DEFAULT 0,  -- Clearer for available stock
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE StockMovement (
-    id SERIAL PRIMARY KEY,
-    product_id INT REFERENCES Product(id) ON DELETE CASCADE,
-    type VARCHAR(50) CHECK (type IN ('stock-in', 'sale', 'manual-removal')),
-    quantity INT NOT NULL,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- Create InventoryMovement Table
+CREATE TABLE IF NOT EXISTS InventoryMovement (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    product_id INTEGER NOT NULL,
+    movement_type TEXT CHECK (movement_type IN ('stock-in', 'sale', 'manual-removal')),
+    quantity INTEGER NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES Products(id) ON DELETE CASCADE
 );
 
--- 🔹 Index for faster lookups
-CREATE INDEX idx_product_sku ON Product(sku);
-CREATE INDEX idx_stockmovement_product ON StockMovement(product_id);
+-- Create Indexes for performance
+CREATE INDEX IF NOT EXISTS idx_product_code ON Products(product_code);
+CREATE INDEX IF NOT EXISTS idx_inventorymovement_product ON InventoryMovement(product_id);
