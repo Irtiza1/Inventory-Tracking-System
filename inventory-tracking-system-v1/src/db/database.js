@@ -1,0 +1,19 @@
+const sqlite3 = require("sqlite3").verbose();
+const path = require("path");
+
+// Connect to database
+const db = new sqlite3.Database(path.join(__dirname, "inventory-v1.db"), (err) => {
+    if (err) console.error("Error connecting to database:", err.message);
+    else console.log("Connected to SQLite database");
+});
+
+// Run Schema
+const fs = require("fs");
+const schema = fs.readFileSync(path.join(__dirname, "schema.sql"), "utf8");
+
+db.exec(schema, (err) => {
+    if (err) console.error("Error executing schema:", err.message);
+    else console.log("Database tables initialized");
+});
+
+module.exports = db;
