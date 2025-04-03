@@ -7,24 +7,17 @@ const ProductRoutes = require("./routes/ProductRoutes");
 const InventoryMovementRoutes = require("./routes/InventoryMovementRoute")
 const app = express();
 
-// ---------- Middleware (Minimal for Stage 1) ----------
-app.use(express.json()); // Only needed middleware for JSON APIs
-app.use(express.urlencoded({ extended: false })); // Simpler than `true`
+app.use(express.json());
+app.use(express.urlencoded({ extended: false })); 
 
-// ---------- Routes ----------
 app.use("/products", ProductRoutes);
 app.use("/movements", InventoryMovementRoutes);
 
-// ---------- Error Handling (Simplified) ----------
 app.use((err, req, res, next) => {
-  console.error(err); // Log the error
+  console.error(err);
   res.status(500).json({ error: "Internal server error" });
 });
 
-// ---------- Server Startup ----------
 app.listen(PORT, () => {
   console.log(`Kirana Store API running on port ${PORT}`);
 });
-
-// For testing (if needed)
-// module.exports = app;
