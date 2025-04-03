@@ -17,27 +17,35 @@ const InventoryMovementModel = {
   },
 
   // Record movement
-  recordMovement: async function(productId, movementType, quantity) {
-    // 1. Update stock
-    await ProductModel.updateStock(productId, quantity);
-    
+  recordMovement: async function(productId,movementType, quantity) {
     // 2. Record movement
     return this._execute(
       'run',
-      `INSERT INTO InventoryMovements (product_id, movement_type, quantity) 
+      `INSERT INTO InventoryMovement (product_id,movement_type, quantity) 
        VALUES (?, ?, ?)`,
       [productId, movementType, quantity]
     );
   },
 
   // Get movements
-  getMovements: function(productId) {
-    return this._execute(
-      'all',
-      'SELECT * FROM InventoryMovements WHERE product_id = ?',
-      [productId]
-    );
+  getMovements: function (productCode) {
+    return new Promise((resolve, reject) => {
+        db.all(
+            `SELECT I.id, I.product_id, P.product_code, I.movement_type, 
+                    I.quantity, I.timestamp 
+             FROM InventoryMovement AS I 
+             INNER JOIN Products AS P ON I.product_id = P.id 
+             WHERE P.product_code = ?;`, 
+            [productCode],
+            (err, rows) => {
+                if (err) return reject(err);
+                resolve(rows);
+            }
+        );
+    });
   }
+
+
 };
 
 module.exports = InventoryMovementModel;

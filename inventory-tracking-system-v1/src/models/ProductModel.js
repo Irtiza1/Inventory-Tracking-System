@@ -29,29 +29,32 @@ const ProductModel = {
     return this._execute('all', 'SELECT * FROM Products', []);
   },
 
-  getById: function(id) {
-    return this._execute('get', 'SELECT * FROM Products WHERE id = ?', [id]);
+  getById: function(productCode) {
+    return this._execute('get', 'SELECT * FROM Products WHERE product_code = ?', [productCode]);
   },
 
-  updateStock: function(productId, quantity) {
+  getIdByCode: function(productCode) {
+    return this._execute('get', 'SELECT id FROM Products WHERE product_code = ?', [productCode]);
+  },
+  updateStock: function(productCode, quantity) {
     return this._execute(
       'run',
       `UPDATE Products SET available_quantity = available_quantity + ? 
-       WHERE id = ?`,
-      [quantity, productId]
+       WHERE product_code = ?`,
+      [quantity, productCode]
     );
   },
 
-  getCurrentStock: function(productId) {
+  getCurrentStock: function(productCode) {
     return this._execute(
       'get',
-      'SELECT available_quantity FROM Products WHERE id = ?',
-      [productId]
+      'SELECT available_quantity FROM Products WHERE product_code = ?',
+      [productCode]
     );
   },
 
-  delete: function(id) {
-    return this._execute('run', 'DELETE FROM Products WHERE id = ?', [id]);
+  delete: function(productCode) {
+    return this._execute('run', 'DELETE FROM Products WHERE product_code = ?', [productCode]);
   }
 };
 

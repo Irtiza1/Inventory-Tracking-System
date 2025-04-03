@@ -1,5 +1,5 @@
 const ProductModel = require("../models/ProductModel");
-
+const InventoryMovementModel = require("../models/InventoryMovementModel");
 const ProductController = {
   // Create product
   create: async (req, res) => {
@@ -31,7 +31,15 @@ const ProductController = {
   // Get product by ID
   getById: async (req, res) => {
     try {
-      const { data } = await ProductModel.getById(req.params.id);
+      const {productCode} = req.params
+      // Basic validation
+      // if (!id || isNaN(parseInt(id))) {
+      //   return res.status(400).json({ error: "Invalid or missing ID" });
+      // }
+      if (!productCode) {
+        return res.status(400).json({ error: "Invalid product code" });
+      }
+      const { data } = await ProductModel.getById(productCode);
       if (!data) return res.status(404).json({ error: "Product not found" });
       res.json(data);
     } catch (err) {
@@ -41,24 +49,147 @@ const ProductController = {
 
   // Update stock
   updateStock: async (req, res) => {
-    try {
-      const { quantity } = req.body;
-      if (!quantity && quantity !== 0) {
-        return res.status(400).json({ error: "Quantity is required" });
-      }
+      try {
+          const { productCode,operation } = req.params;
+          const { quantity } = req.body; // Added optional notes field
 
-      const { changes } = await ProductModel.updateStock(req.params.productId, quantity);
-      if (changes === 0) return res.status(404).json({ error: "Product not found" });
-      res.json({ message: "Stock updated" });
-    } catch (err) {
-      res.status(500).json({ error: "Failed to update stock" });
-    }
+          // Enhanced validation
+          // const productId = parseInt(id);
+          // if (isNaN(productId) || productId <= 0) {
+          //     return res.status(400).json({ error: "Invalid product ID" });
+          // }
+          if (!productCode) {
+            return res.status(400).json({ error: "Invalid product code" });
+          }
+          if (typeof quantity !== 'number' || !Number.isInteger(quantity) || quantity <= 0) {
+              return res.status(400).json({ error: "Quantity must be a positive integer" });
+          }
+
+          // Verify product exists first
+          const product = await ProductModel.getById(productCode);
+          if (!product) {
+              return res.status(404).json({ error: "Product not found" });
+          }
+
+          if (operation === 'stock-in') {
+            // Update stock
+            await ProductModel.updateStock(productCode, quantity);
+            
+            // Record movement with additional context
+            await InventoryMovementModel.recordMovement(productCode,"stock-in",quantity);
+          }
+          else if (operation === 'sale') {
+            // Update stock
+            await ProductModel.updateStock(productCode, -quantity);
+
+            // Record movement with additional context
+            await InventoryMovementModel.recordMovement(productCode, "sale",quantity);
+          }
+          else if (operation === 'manual-removal') {
+            // Update stock
+            await ProductModel.updateStock(productCode, -quantity);
+            // Record movement with additional context
+            await InventoryMovementModel.recordMovement(productCode,"manual-removal", quantity);
+          }
+          else {
+            return res.status(400).json({ error: "Invalid operation" });
+          }
+
+
+          // Return updated stock info
+          const updatedStock = await ProductModel.getCurrentStock(productCode);
+          res.json({ 
+              message: "Stock updated successfully",
+              productCode,
+              newQuantity: updatedStock
+          });
+
+      } catch (err) {
+          console.error("Stock update error:", err);
+          res.status(500).json({ 
+              error: "Failed to update stock",
+          });
+      }
   },
+  // // addStock: async (req, res) => {
+  // //   try {
+  // //     const {id} = req.params;
+  // //     const { quantity } = req.body;
+  // //     // Basic validation
+  // //     if (!id || isNaN(parseInt(id))) {
+  // //       return res.status(400).json({ error: "Invalid or missing ID" });
+  // //     }
+  // //     if (!quantity && quantity !== 0) {
+  // //       return res.status(400).json({ error: "Quantity is required" });
+  // //     }
+
+  // //     const { changes } = await ProductModel.updateStock(id, quantity);
+  // //     if (changes === 0) return res.status(404).json({ error: "Product not found" });
+  // //     // Record movement
+  // //     await InventoryMovementModel.recordMovement(id, "stock-in", quantity);
+  // //     res.json({ message: "Stock Added" });
+  // //   } catch (err) {
+  // //     res.status(500).json({ error: "Failed to update stock" });
+  // //   }
+  // // },
+
+  // // Sale product
+  // saleProduct: async (req, res) => {
+  //   try {
+  //     const {id} = req.params;
+  //     const { quantity } = req.body;
+  //     // Basic validation
+  //     if (!id || isNaN(parseInt(id))) {
+  //       return res.status(400).json({ error: "Invalid or missing ID" });
+  //     }
+  //     if (!quantity && quantity !== 0) {
+  //       return res.status(400).json({ error: "Quantity is required" });
+  //     }
+
+  //     const { changes } = await ProductModel.updateStock(id, quantity);
+  //     if (changes === 0) return res.status(404).json({ error: "Product not found" });
+  //     res.json({ message: "Stock Updated" });
+  //   } catch (err) {
+  //     res.status(500).json({ error: "Failed to update stock" });
+  //   }
+  // },
+
+  // // remove product
+  // removeProduct: async (req, res) => {
+  //   try {
+  //     const {id} = req.params;
+  //     const { quantity } = req.body;
+  //     // Basic validation
+  //     if (!id || isNaN(parseInt(id))) {
+  //       return res.status(400).json({ error: "Invalid or missing ID" });
+  //     }
+  //     if (!quantity && quantity !== 0) {
+  //       return res.status(400).json({ error: "Quantity is required" });
+  //     }
+
+  //     const { changes } = await ProductModel.updateStock(id, quantity);
+  //     if (changes === 0) return res.status(404).json({ error: "Product not found" });
+  //     res.json({ message: "Stock Added" });
+  //   } catch (err) {
+  //     res.status(500).json({ error: "Failed to update stock" });
+  //   }
+  // },
 
   // Get current stock
   getCurrentStock: async (req, res) => {
     try {
-      const { data } = await ProductModel.getCurrentStock(req.params.productId);
+      // Basic ID validation
+      // const {id} = req.params;
+      // if (!id || isNaN(parseInt(id))) {
+      // return res.status(400).json({ error: "Invalid or missing ID" });
+      // }
+
+      const {productCode} = req.params
+      // Basic validation
+      if (!productCode) {
+        return res.status(400).json({ error: "Invalid product code" });
+      }
+      const { data } = await ProductModel.getCurrentStock(productCode);
       if (!data) return res.status(404).json({ error: "Product not found" });
       res.json({ availableStock: data.available_quantity });
     } catch (err) {
@@ -67,9 +198,20 @@ const ProductController = {
   },
 
   // Delete product
-  delete: async (req, res) => {
+  deleteProduct: async (req, res) => {
     try {
-      const { changes } = await ProductModel.delete(req.params.id);
+      // const {id} = req.params;
+      // // Basic ID validation
+      // if (!id || isNaN(parseInt(id))) {
+      //   return res.status(400).json({ error: "Invalid or missing ID" });
+      // }
+
+      const {productCode} = req.params
+      // Basic validation
+      if (!productCode) {
+        return res.status(400).json({ error: "Invalid product code" });
+      }
+      const { changes } = await ProductModel.delete(productCode);
       if (changes === 0) return res.status(404).json({ error: "Product not found" });
       res.json({ message: "Product deleted" });
     } catch (err) {

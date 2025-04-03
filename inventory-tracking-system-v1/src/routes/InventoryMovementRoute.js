@@ -6,6 +6,6 @@ const InventoryMovementController = require("../controllers/InventoryMovementCon
 
 // Inventory Movements
 router.post("/", InventoryMovementController.recordMovement);
-router.get("/:productId", InventoryMovementController.getMovements);
+router.get("/:productCode", InventoryMovementController.getMovements);
 
 module.exports = router;

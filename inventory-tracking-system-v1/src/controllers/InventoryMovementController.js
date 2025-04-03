@@ -1,17 +1,20 @@
 const InventoryMovementModel = require("../models/InventoryMovementModel");
-
+const ProductModel = require("../models/ProductModel");
 const InventoryMovementController = {
   // Record movement
-  recordMovement: async (req, res) => {
+  recordMovement: async ({ productCode, movementType, quantity })=> {
     try {
-      const { productId, movementType, quantity } = req.body;
+      // const { productId, operation}  =req.params
+      // const { quantity } = req.body;
       
+      const productId = await ProductModel.getIdByCode(productCode);
+
       // Basic validation
-      if (!productId || !movementType || !quantity) {
+      if (!productId || !operation || !quantity) {
         return res.status(400).json({ error: "Missing required fields" });
       }
 
-      await InventoryMovementModel.recordMovement(productId, movementType, quantity);
+      await InventoryMovementModel.recordMovement(productId, operation, quantity);
       res.json({ message: "Movement recorded" });
     } catch (err) {
       res.status(500).json({ error: "Failed to record movement" });
@@ -21,12 +24,20 @@ const InventoryMovementController = {
   // Get movements
   getMovements: async (req, res) => {
     try {
-      const { data } = await InventoryMovementModel.getMovements(req.params.productId);
-      res.json(data || []);
+        const { productCode } = req.params; 
+
+        if (!productCode) {
+            return res.status(400).json({ error: "Invalid product code" });
+        }
+
+        const movements = await InventoryMovementModel.getMovements(productCode); 
+        res.json(movements || []);
     } catch (err) {
-      res.status(500).json({ error: "Failed to fetch movements" });
+        console.error(err);
+        res.status(500).json({ error: "Failed to fetch movements" });
     }
   }
+
 };
 
 module.exports = InventoryMovementController;
