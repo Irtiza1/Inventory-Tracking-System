@@ -1,4 +1,4 @@
-const Supplier = require('../models/supplier');
+const Supplier = require('../models/SupplierModel');
 
 const SupplierService = {
   createSupplier: async (supplierData) => {

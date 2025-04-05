@@ -1,6 +1,6 @@
 // services/productService.js
 const Product = require('../models/ProductModel');
-
+console.log("5")
 const ProductService = {
   createProduct: async (productData) => {
     return Product.create(productData);

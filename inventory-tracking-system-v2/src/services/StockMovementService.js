@@ -1,4 +1,4 @@
-const StockMovement = require('../models/stockMovement');
+const StockMovement = require('../models/StockMovementModel');
 
 const StockMovementService = {
   createStockMovement: async (movementData) => {

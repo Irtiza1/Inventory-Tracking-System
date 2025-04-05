@@ -1,5 +1,5 @@
-const UserService = require('../services/userService');
-const { validateUser } = require('../validations/userValidation');
+const UserService = require('../services/UserService');
+const { validateUser } = require('../validations/UserValidation');
 
 const UserController = {
   createUser: async (req, res) => {

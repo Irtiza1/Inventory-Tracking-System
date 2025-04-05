@@ -1,5 +1,5 @@
-const SupplierService = require('../services/supplierService');
-const { validateSupplier } = require('../validations/supplierValidation');
+const SupplierService = require('../services/SupplierService');
+const { validateSupplier } = require('../validations/SupplierValidation');
 
 const SupplierController = {
   createSupplier: async (req, res) => {

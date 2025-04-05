@@ -1,5 +1,5 @@
-const StoreService = require('../services/storeService');
-const { validateStore } = require('../validations/storeValidation');
+const StoreService = require('../services/StoreService');
+const { validateStore } = require('../validations/StoreValidation');
 
 const StoreController = {
   createStore: async (req, res) => {

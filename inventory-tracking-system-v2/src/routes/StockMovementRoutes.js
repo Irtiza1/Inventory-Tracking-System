@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const StockMovementController = require('../controllers/stockMovementController');
+const StockMovementController = require('../controllers/StockMovementController');
 
 router.post('/', StockMovementController.createStockMovement);
 router.get('/', StockMovementController.getAllStockMovements);

@@ -1,6 +1,6 @@
-const ProductService = require('../services/productService');
+const ProductService = require('../services/ProductService');
 const { validateProduct } = require('../validations/ProductValidation');
-
+console.log("3")
 const ProductController = {
   createProduct: async (req, res) => {
     const { error } = validateProduct(req.body);
@@ -15,9 +15,11 @@ const ProductController = {
   },
   getAllProducts: async (req, res) => {
     try {
+      console.log("3.1")
       const products = await ProductService.getAllProducts();
       res.status(200).json(products);
     } catch (err) {
+      console.error("🔥 Error in getAllProducts:", err); // Log the actual error
       res.status(500).json({ error: 'Failed to retrieve products' });
     }
   },

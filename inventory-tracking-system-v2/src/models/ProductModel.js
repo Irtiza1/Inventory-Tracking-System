@@ -1,6 +1,6 @@
 // models/product.js
 const db = require('../db/database');
-
+console.log("6")
 const Product = {
   create: async (product) => {
     return db.one(
@@ -36,7 +36,7 @@ module.exports = Product;
 // const ProductModel = {
 //     // Create a new product
 //     create: async (name, productCode, price, initialQuantity) => {
-//         const sql = `INSERT INTO Products (name, product_code, price, initial_quantity, available_quantity) 
+//         const sql = `INSERT INTO product (name, product_code, price, initial_quantity, available_quantity) 
 //                      VALUES (?, ?, ?, ?, ?)`;
 //         return new Promise((resolve, reject) => {
 //             db.run(sql, [name, productCode, price, initialQuantity, initialQuantity], 
@@ -50,7 +50,7 @@ module.exports = Product;
 //     // Get all products
 //     getAll: async () => {
 //         return new Promise((resolve, reject) => {
-//             db.all("SELECT * FROM Products", [], (err, rows) => {
+//             db.all("SELECT * FROM product", [], (err, rows) => {
 //                 err ? reject(err) : resolve(rows);
 //             });
 //         });
@@ -59,7 +59,7 @@ module.exports = Product;
 //     // Get product by ID
 //     getById: async (id) => {
 //         return new Promise((resolve, reject) => {
-//             db.get("SELECT * FROM Products WHERE id = ?", [id], (err, row) => {
+//             db.get("SELECT * FROM product WHERE id = ?", [id], (err, row) => {
 //                 err ? reject(err) : resolve(row);
 //             });
 //         });
@@ -68,7 +68,7 @@ module.exports = Product;
 //     // Update stock (atomic operation)
 //     updateStock: async (productId, quantity) => {
 //         return new Promise((resolve, reject) => {
-//             const sql = `UPDATE Products 
+//             const sql = `UPDATE product 
 //                          SET available_quantity = available_quantity + ? 
 //                          WHERE id = ?`;
 //             db.run(sql, [quantity, productId], function (err) {
@@ -80,7 +80,7 @@ module.exports = Product;
 //     // Get current stock
 //     getCurrentStock: async (productId) => {
 //         return new Promise((resolve, reject) => {
-//             db.get("SELECT available_quantity FROM Products WHERE id = ?", 
+//             db.get("SELECT available_quantity FROM product WHERE id = ?", 
 //                 [productId], 
 //                 (err, row) => {
 //                     err ? reject(err) : resolve(row?.available_quantity);

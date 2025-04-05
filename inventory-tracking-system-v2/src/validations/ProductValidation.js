@@ -1,6 +1,7 @@
 const Joi = require('joi');
 
 // Define Joi validation schemas
+console.log("4")
 const validateProduct = (product) => {
   const schema = Joi.object({
     name: Joi.string().trim().required().messages({

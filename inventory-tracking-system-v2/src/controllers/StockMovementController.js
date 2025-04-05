@@ -1,5 +1,5 @@
-const StockMovementService = require('../services/stockMovementService');
-const { validateStockMovement } = require('../validations/stockMovementValidation');
+const StockMovementService = require('../services/StockMovementService');
+const { validateStockMovement } = require('../validations/StockMovementValidation');
 
 const StockMovementController = {
   createStockMovement: async (req, res) => {
