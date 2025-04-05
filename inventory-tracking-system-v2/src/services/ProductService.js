@@ -1,25 +1,63 @@
 // services/productService.js
+const db = require('../db/database');
 const Product = require('../models/ProductModel');
-console.log("5")
+
 const ProductService = {
   createProduct: async (productData) => {
-    return Product.create(productData);
+    return db.tx(async t => {
+      const newProduct = await Product.create(productData, t);
+      return newProduct;
+    });
   },
+
   getAllProducts: async () => {
     return Product.findAll();
   },
+
   getProductById: async (id) => {
     return Product.findById(id);
   },
+
   updateProduct: async (id, productData) => {
-    return Product.update(id, productData);
+    return db.tx(async t => {
+      const updatedProduct = await Product.update(id, productData, t);
+      return updatedProduct;
+    });
   },
+
   deleteProduct: async (id) => {
-    return Product.delete(id);
+    return db.tx(async t => {
+      const deletedCount = await Product.delete(id, t);
+      return deletedCount;
+    });
   },
 };
 
 module.exports = ProductService;
+
+
+
+// const Product = require('../models/ProductModel');
+// // console.log("5")
+// const ProductService = {
+//   createProduct: async (productData) => {
+//     return Product.create(productData);
+//   },
+//   getAllProducts: async () => {
+//     return Product.findAll();
+//   },
+//   getProductById: async (id) => {
+//     return Product.findById(id);
+//   },
+//   updateProduct: async (id, productData) => {
+//     return Product.update(id, productData);
+//   },
+//   deleteProduct: async (id) => {
+//     return Product.delete(id);
+//   },
+// };
+
+// module.exports = ProductService;
 
 
 // // services/ProductService.js

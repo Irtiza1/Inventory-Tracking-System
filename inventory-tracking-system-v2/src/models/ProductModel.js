@@ -1,33 +1,68 @@
-// models/product.js
 const db = require('../db/database');
-console.log("6")
+
 const Product = {
-  create: async (product) => {
-    return db.one(
+  create: async (product, t = db) => {
+    return t.one(
       `INSERT INTO Product (name, product_code, price, initial_quantity, supplier_id)
        VALUES ($1, $2, $3, $4, $5) RETURNING *`,
       [product.name, product.product_code, product.price, product.initial_quantity, product.supplier_id]
     );
   },
-  findAll: async () => {
-    return db.any('SELECT * FROM Product');
+
+  findAll: async (t = db) => {
+    return t.any('SELECT * FROM Product');
   },
-  findById: async (id) => {
-    return db.oneOrNone('SELECT * FROM Product WHERE id = $1', [id]);
+
+  findById: async (id, t = db) => {
+    return t.oneOrNone('SELECT * FROM Product WHERE id = $1', [id]);
   },
-  update: async (id, product) => {
-    return db.oneOrNone(
-      `UPDATE Product SET name = $1, product_code = $2, price = $3, initial_quantity = $4, supplier_id = $5, updated_at = CURRENT_TIMESTAMP
-       WHERE id = $6 RETURNING *`,
+
+  update: async (id, product, t = db) => {
+    return t.oneOrNone(
+      `UPDATE Product
+       SET name = $1, product_code = $2, price = $3, initial_quantity = $4, supplier_id = $5, updated_at = CURRENT_TIMESTAMP
+       WHERE id = $6
+       RETURNING *`,
       [product.name, product.product_code, product.price, product.initial_quantity, product.supplier_id, id]
     );
   },
-  delete: async (id) => {
-    return db.result('DELETE FROM Product WHERE id = $1', [id], r => r.rowCount);
+
+  delete: async (id, t = db) => {
+    return t.result('DELETE FROM Product WHERE id = $1', [id], r => r.rowCount);
   },
 };
 
 module.exports = Product;
+
+
+// const db = require('../db/database');
+// const Product = {
+//   create: async (product) => {
+//     return db.one(
+//       `INSERT INTO Product (name, product_code, price, initial_quantity, supplier_id)
+//        VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+//       [product.name, product.product_code, product.price, product.initial_quantity, product.supplier_id]
+//     );
+//   },
+//   findAll: async () => {
+//     return db.any('SELECT * FROM Product');
+//   },
+//   findById: async (id) => {
+//     return db.oneOrNone('SELECT * FROM Product WHERE id = $1', [id]);
+//   },
+//   update: async (id, product) => {
+//     return db.oneOrNone(
+//       `UPDATE Product SET name = $1, product_code = $2, price = $3, initial_quantity = $4, supplier_id = $5, updated_at = CURRENT_TIMESTAMP
+//        WHERE id = $6 RETURNING *`,
+//       [product.name, product.product_code, product.price, product.initial_quantity, product.supplier_id, id]
+//     );
+//   },
+//   delete: async (id) => {
+//     return db.result('DELETE FROM Product WHERE id = $1', [id], r => r.rowCount);
+//   },
+// };
+
+// module.exports = Product;
 
 
 

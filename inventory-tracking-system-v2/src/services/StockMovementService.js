@@ -1,24 +1,51 @@
 const StockMovement = require('../models/StockMovementModel');
 
 const StockMovementService = {
-  createStockMovement: async (movementData) => {
-    return StockMovement.create(movementData);
+  createStockMovement: async (movementData, t) => {
+    return StockMovement.create(movementData, t);
   },
-  getAllStockMovements: async () => {
-    return StockMovement.findAll();
+
+  getAllStockMovements: async (t) => {
+    return StockMovement.findAll(t);
   },
-  getStockMovementById: async (id) => {
-    return StockMovement.findById(id);
+
+  getStockMovementById: async (id, t) => {
+    return StockMovement.findById(id, t);
   },
-  updateStockMovement: async (id, movementData) => {
-    return StockMovement.update(id, movementData);
+
+  updateStockMovement: async (id, movementData, t) => {
+    return StockMovement.update(id, movementData, t);
   },
-  deleteStockMovement: async (id) => {
-    return StockMovement.delete(id);
+
+  deleteStockMovement: async (id, t) => {
+    return StockMovement.delete(id, t);
   },
 };
 
 module.exports = StockMovementService;
+
+
+// const StockMovement = require('../models/StockMovementModel');
+
+// const StockMovementService = {
+//   createStockMovement: async (movementData) => {
+//     return StockMovement.create(movementData);
+//   },
+//   getAllStockMovements: async () => {
+//     return StockMovement.findAll();
+//   },
+//   getStockMovementById: async (id) => {
+//     return StockMovement.findById(id);
+//   },
+//   updateStockMovement: async (id, movementData) => {
+//     return StockMovement.update(id, movementData);
+//   },
+//   deleteStockMovement: async (id) => {
+//     return StockMovement.delete(id);
+//   },
+// };
+
+// module.exports = StockMovementService;
 
 
 // // services/InventoryMovementService.js

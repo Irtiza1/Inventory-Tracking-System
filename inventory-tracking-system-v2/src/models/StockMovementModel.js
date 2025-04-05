@@ -1,32 +1,81 @@
 const db = require('../db/database');
 
 const StockMovement = {
-  create: async (movement) => {
-    return db.one(
+  create: async (movement, t = db) => {
+    return t.one(
       `INSERT INTO StockMovement (product_id, store_id, movement_type, quantity)
        VALUES ($1, $2, $3, $4) RETURNING *`,
       [movement.product_id, movement.store_id, movement.movement_type, movement.quantity]
     );
   },
-  findAll: async () => {
-    return db.any('SELECT * FROM StockMovement');
+
+  findAll: async (t = db) => {
+    return t.any('SELECT * FROM StockMovement');
   },
-  findById: async (id) => {
-    return db.oneOrNone('SELECT * FROM StockMovement WHERE id = $1', [id]);
+
+  findById: async (id, t = db) => {
+    return t.oneOrNone('SELECT * FROM StockMovement WHERE id = $1', [id]);
   },
-  update: async (id, movement) => {
-    return db.oneOrNone(
+
+  findByStore: async (store_id, t = db) => {
+    return t.any(
+      `SELECT * FROM StockMovement WHERE store_id = $1 ORDER BY timestamp DESC`,
+      [store_id]
+    );
+  },
+
+  update: async (id, movement, t = db) => {
+    return t.oneOrNone(
       `UPDATE StockMovement SET product_id = $1, store_id = $2, movement_type = $3, quantity = $4
        WHERE id = $5 RETURNING *`,
       [movement.product_id, movement.store_id, movement.movement_type, movement.quantity, id]
     );
   },
-  delete: async (id) => {
-    return db.result('DELETE FROM StockMovement WHERE id = $1', [id], r => r.rowCount);
+
+  delete: async (id, t = db) => {
+    return t.result('DELETE FROM StockMovement WHERE id = $1', [id], r => r.rowCount);
   },
 };
 
 module.exports = StockMovement;
+
+
+// const db = require('../db/database');
+
+// const StockMovement = {
+//   create: async (movement) => {
+//     return db.one(
+//       `INSERT INTO StockMovement (product_id, store_id, movement_type, quantity)
+//        VALUES ($1, $2, $3, $4) RETURNING *`,
+//       [movement.product_id, movement.store_id, movement.movement_type, movement.quantity]
+//     );
+//   },
+//   findAll: async () => {
+//     return db.any('SELECT * FROM StockMovement');
+//   },
+//   findById: async (id) => {
+//     return db.oneOrNone('SELECT * FROM StockMovement WHERE id = $1', [id]);
+//   },
+
+//   findByStore: async (store_id) => {
+//     return db.any(
+//       `SELECT * FROM StockMovement WHERE store_id = $1 ORDER BY timestamp DESC`,
+//       [store_id]
+//     );
+//   },
+//   update: async (id, movement) => {
+//     return db.oneOrNone(
+//       `UPDATE StockMovement SET product_id = $1, store_id = $2, movement_type = $3, quantity = $4
+//        WHERE id = $5 RETURNING *`,
+//       [movement.product_id, movement.store_id, movement.movement_type, movement.quantity, id]
+//     );
+//   },
+//   delete: async (id) => {
+//     return db.result('DELETE FROM StockMovement WHERE id = $1', [id], r => r.rowCount);
+//   },
+// };
+
+// module.exports = StockMovement;
 
 
 

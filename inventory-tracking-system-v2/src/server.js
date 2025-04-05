@@ -12,6 +12,7 @@ const StockMovementRoutes = require("./routes/StockMovementRoutes");
 const StoreRoutes = require("./routes/StoreRoutes");
 const SupplierRoutes = require("./routes/SupplierRoutes");
 const UserRoutes = require("./routes/UserRoutes");
+const storeStockRoutes = require('./routes/storeStockRoutes');
 
 const app = express();
 
@@ -38,6 +39,7 @@ app.use("/stock", StockMovementRoutes);
 app.use("/stores", StoreRoutes);
 app.use("/suppliers", SupplierRoutes);
 app.use("/users", UserRoutes);
+app.use('/store-stock', storeStockRoutes);
 
 // Centralized error handling middleware
 app.use((err, req, res, next) => {
