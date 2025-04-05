@@ -34,6 +34,15 @@ const UserController = {
       res.status(500).json({ error: 'Failed to retrieve user' });
     }
   },
+  getUserByUsername: async (req, res) => {
+    try {
+      const user = await UserService.getUserByUsername(req.params.name);
+      if (!user) return res.status(404).json({ error: 'User not found' });
+      res.status(200).json(user);
+    } catch (err) {
+      res.status(500).json({ error: 'Failed to retrieve user' });
+    }
+  },
   updateUser: async (req, res) => {
     const { error } = validateUser(req.body, true);
     if (error) return res.status(400).json({ error: error.details[0].message });

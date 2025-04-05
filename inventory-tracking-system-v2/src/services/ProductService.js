@@ -1,39 +1,173 @@
 // services/productService.js
-const db = require('../db/database');
 const Product = require('../models/ProductModel');
 
 const ProductService = {
   createProduct: async (productData) => {
-    return db.tx(async t => {
-      const newProduct = await Product.create(productData, t);
+    try {
+      const newProduct = await Product.createProduct(productData);
       return newProduct;
-    });
+    } catch (error) {
+      console.error('Error creating product:', error);
+      throw new Error('Failed to create product');
+    }
   },
 
   getAllProducts: async () => {
-    return Product.findAll();
+    try {
+      const products = await Product.findAllProducts();
+      return products;
+    } catch (error) {
+      console.error('Error fetching all products:', error);
+      throw new Error('Failed to fetch products');
+    }
   },
 
-  getProductById: async (id) => {
-    return Product.findById(id);
+  getProductByProductCode: async (product_code) => {
+    try {
+      const product = await Product.findByProductCode(product_code);
+      return product;
+    } catch (error) {
+      console.error(`Error fetching product with code "${product_code}":`, error);
+      throw new Error('Failed to fetch product by product code');
+    }
   },
 
-  updateProduct: async (id, productData) => {
-    return db.tx(async t => {
-      const updatedProduct = await Product.update(id, productData, t);
+  getProductBySupplierId: async (supplier_id) => {
+    try {
+      const products = await Product.findBySupplierId(supplier_id);
+      return products;
+    } catch (error) {
+      console.error(`Error fetching products for supplier ID "${supplier_id}":`, error);
+      throw new Error('Failed to fetch products by supplier ID');
+    }
+  },
+
+  getIdByProductCode: async (product_code) => {
+    try {
+      const productId = await Product.getIdByProductCode(product_code);
+      return productId;
+    } catch (error) {
+      console.error(`Error fetching product ID for code "${product_code}":`, error);
+      throw new Error('Failed to fetch product ID by product code');
+    }
+  },
+
+  updateProduct: async (product_code, productData) => {
+    try {
+      const updatedProduct = await Product.updateProduct(product_code, productData);
       return updatedProduct;
-    });
+    } catch (error) {
+      console.error(`Error updating product with code "${product_code}":`, error);
+      throw new Error('Failed to update product');
+    }
   },
 
-  deleteProduct: async (id) => {
-    return db.tx(async t => {
-      const deletedCount = await Product.delete(id, t);
+  deleteProduct: async (product_code) => {
+    try {
+      const deletedCount = await Product.deleteProduct(product_code);
       return deletedCount;
-    });
+    } catch (error) {
+      console.error(`Error deleting product with code "${product_code}":`, error);
+      throw new Error('Failed to delete product');
+    }
   },
 };
 
 module.exports = ProductService;
+
+// // services/productService.js
+// const Product = require('../models/ProductModel');
+
+// const ProductService = {
+//   createProduct: async (productData) => {
+//     // Use the ORM method to create a new product
+//     const newProduct = await Product.createProduct(productData);
+//     return newProduct;
+//   },
+
+//   getAllProducts: async () => {
+//     // Use the ORM method to get all products
+//     const products = await Product.findAllProducts();
+//     return products;
+//   },
+
+//   getProductByProductCode: async (product_code) => {
+//     // Use the ORM method to get a product by product_code
+//     const product = await Product.findByProductCode(product_code);
+//     return product;
+//   },
+
+//   getProductBySupplierId: async (supplier_id) => {
+//     // Use the ORM method to get products by supplier_id
+//     const products = await Product.findBySupplierId(supplier_id);
+//     return products;
+//   },
+
+//   getIdByProductCode: async (product_code) => {
+//     // Use the ORM method to get a product ID by product_code
+//     const productId = await Product.getIdByProductCode(product_code);
+//     return productId;
+//   },
+
+//   updateProduct: async (product_code, productData) => {
+//     // Use the ORM method to update the product
+//     const updatedProduct = await Product.updateProduct(product_code, productData);
+//     return updatedProduct;
+//   },
+
+//   deleteProduct: async (product_code) => {
+//     // Use the ORM method to delete the product
+//     const deletedCount = await Product.deleteProduct(product_code);
+//     return deletedCount;
+//   },
+// };
+
+// module.exports = ProductService;
+
+
+
+// second option
+// const db = require('../db/database');
+// const Product = require('../models/ProductModel');
+
+// const ProductService = {
+//   createProduct: async (productData) => {
+//     return db.tx(async t => {
+//       const newProduct = await Product.create(productData, t);
+//       return newProduct;
+//     });
+//   },
+
+//   getAllProducts: async () => {
+//     return Product.findAll();
+//   },
+
+//   getProductByProductCode: async (product_code) => {
+//     return Product.findByProductCode(product_code);
+//   },
+
+//   getProductBySupplierId: async (supplier_id) => {
+//     return Product.findBySupplierId(supplier_id);
+//   },
+//   getIdByProductCode: async (product_code) => {
+//     return Product.getIdByProductCode(product_code);
+//   },
+//   updateProduct: async (product_code, productData) => {
+//     return db.tx(async t => {
+//       const updatedProduct = await Product.update(product_code, productData, t);
+//       return updatedProduct;
+//     });
+//   },
+
+//   deleteProduct: async (product_code) => {
+//     return db.tx(async t => {
+//       const deletedCount = await Product.delete(product_code, t);
+//       return deletedCount;
+//     });
+//   },
+// };
+
+// module.exports = ProductService;
 
 
 

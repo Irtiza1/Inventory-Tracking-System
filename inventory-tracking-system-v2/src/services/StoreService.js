@@ -1,28 +1,79 @@
 const Store = require('../models/StoreModel');
 
 const StoreService = {
-  createStore: async (storeData, t) => {
-    return Store.create(storeData, t);
+  createStore: async (storeDataproduct) => {
+    try {
+      return await Store.createStore(storeDataproduct);
+    } catch (error) {
+      console.error('Error creating store:', error);
+      throw new Error('Failed to create store');
+    }
   },
 
-  getAllStores: async (t) => {
-    return Store.findAll(t);
+  getAllStores: async () => {
+    try {
+      return await Store.findAllStores();
+    } catch (error) {
+      console.error('Error fetching all stores:', error);
+      throw new Error('Failed to fetch stores');
+    }
   },
 
-  getStoreById: async (id, t) => {
-    return Store.findById(id, t);
+  getStoreByIdOrName: async (idOrNameproduct) => {
+    try {
+      return await Store.findByIdOrName(idOrNameproduct);
+    } catch (error) {
+      console.error(`Error fetching store by ID or name:`, error);
+      throw new Error('Failed to fetch store');
+    }
   },
 
-  updateStore: async (id, storeData, t) => {
-    return Store.update(id, storeData, t);
+  updateStoreByIdOrName: async (idOrName, storeDataproduct) => {
+    try {
+      return await Store.updateByIdOrName(idOrName, storeDataproduct);
+    } catch (error) {
+      console.error(`Error updating store with ID or name "${idOrName}":`, error);
+      throw new Error('Failed to update store');
+    }
   },
 
-  deleteStore: async (id, t) => {
-    return Store.delete(id, t);
+  deleteStoreByIdOrName: async (idOrNameproduct) => {
+    try {
+      return await Store.deleteByIdOrName(idOrNameproduct);
+    } catch (error) {
+      console.error(`Error deleting store with ID or name "${idOrNameproduct}":`, error);
+      throw new Error('Failed to delete store');
+    }
   },
 };
 
 module.exports = StoreService;
+
+// const Store = require('../models/StoreModel');
+
+// const StoreService = {
+//   createStore: async (storeDataproduct) => {
+//     return await Store.createStore(storeDataproduct);
+//   },
+
+//   getAllStores: async () => {
+//     return await Store.findAllStores();
+//   },
+
+//   getStoreByIdOrName: async (idOrNameproduct) => {
+//     return Store.findByIdOrName(idOrNameproduct);
+//   },
+
+//   updateStoreByIdOrName: async (idOrName, storeDataproduct) => {
+//     return Store.updateByIdOrName(idOrName, storeDataproduct);
+//   },
+
+//   deleteStoreByIdOrName: async (idOrNameproduct) => {
+//     return Store.deleteByIdOrName(idOrNameproduct);
+//   },
+// };
+
+// module.exports = StoreService;
 
 
 // const Store = require('../models/StoreModel');

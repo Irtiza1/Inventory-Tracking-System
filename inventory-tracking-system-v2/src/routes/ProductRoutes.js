@@ -3,12 +3,14 @@ const router = express.Router();
 const ProductController = require('../controllers/ProductController');
 
 // Routes for product management
-console.log("2")
+// console.log("2")
 router.post('/', ProductController.createProduct);
 router.get('/', ProductController.getAllProducts);
-router.get('/:id', ProductController.getProductById);
-router.put('/:id', ProductController.updateProduct);
-router.delete('/:id', ProductController.deleteProduct);
+router.get('/:product_code', ProductController.getIdByProductCode);
+router.get('/:product_code', ProductController.getProductByProductCode);
+router.get('/:supplier_id', ProductController.getProductBySupplierId);
+router.put('/:product_code', ProductController.updateProduct);
+router.delete('/:product_code', ProductController.deleteProduct);
 
 module.exports = router;
 

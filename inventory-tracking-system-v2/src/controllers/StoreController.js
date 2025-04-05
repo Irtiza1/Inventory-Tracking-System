@@ -21,30 +21,45 @@ const StoreController = {
       res.status(500).json({ error: 'Failed to retrieve stores' });
     }
   },
-  getStoreById: async (req, res) => {
+  getStoreByIdOrName: async (req, res) => {
+    const { idOrName } = req.params;
+    const searchParam = /^\d+$/.test(idOrName)
+      ? { id: parseInt(idOrName, 10) }
+      : { name: idOrName };
+
     try {
-      const store = await StoreService.getStoreById(req.params.id);
+      const store = await StoreService.getStoreByIdOrName(searchParam);
       if (!store) return res.status(404).json({ error: 'Store not found' });
       res.status(200).json(store);
     } catch (err) {
       res.status(500).json({ error: 'Failed to retrieve store' });
     }
   },
-  updateStore: async (req, res) => {
+  updateStoreByIdOrName: async (req, res) => {
     const { error } = validateStore(req.body);
     if (error) return res.status(400).json({ error: error.details[0].message });
 
+    const { idOrName } = req.params;
+    const searchParam = /^\d+$/.test(idOrName)
+      ? { id: parseInt(idOrName, 10) }
+      : { name: idOrName };
+
     try {
-      const store = await StoreService.updateStore(req.params.id, req.body);
-      if (!store) return res.status(404).json({ error: 'Store not found' });
-      res.status(200).json(store);
+      const updated = await StoreService.updateStoreByIdOrName(searchParam, req.body);
+      if (!updated) return res.status(404).json({ error: 'Store not found' });
+      res.status(200).json(updated);
     } catch (err) {
       res.status(500).json({ error: 'Failed to update store' });
     }
   },
-  deleteStore: async (req, res) => {
+  deleteStoreByIdOrName: async (req, res) => {
+    const { idOrName } = req.params;
+    const searchParam = /^\d+$/.test(idOrName)
+      ? { id: parseInt(idOrName, 10) }
+      : { name: idOrName };
+
     try {
-      const deleted = await StoreService.deleteStore(req.params.id);
+      const deleted = await StoreService.deleteStoreByIdOrName(searchParam);
       if (deleted === 0) return res.status(404).json({ error: 'Store not found' });
       res.status(204).send();
     } catch (err) {
