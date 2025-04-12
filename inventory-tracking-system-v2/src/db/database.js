@@ -30,12 +30,12 @@ const sequelize = new Sequelize({
 // Test connection to the database
 sequelize.authenticate()
   .then(() => {
-    console.log('✅ Sequelize Connected');
+    console.log('Sequelize Connected');
     // Optionally sync models (for dev/testing purposes)
     // sequelize.sync({ force: false });
   })
   .catch((err) => {
-    console.error('❌ Database Connection Error (Sequelize):');
+    console.error('Database Connection Error (Sequelize):');
     console.error(`Error Code: ${err.original.code}`);
     console.error(`Message: ${err.message}`);
     process.exit(1); // Exit process if connection fails

@@ -1,16 +1,39 @@
-// services/ProductService.js
+const { Product, Supplier } = require('../models');
+
 class EnhancedProductService {
-    static async searchProducts(searchTerm) {
-      return db.any(
-        `SELECT p.*, s.name as supplier_name 
-         FROM product p
-         LEFT JOIN supplier s ON p.supplier_id = s.id
-         WHERE p.name ILIKE $1 OR p.product_code ILIKE $1`,
-        [`%${searchTerm}%`]
-      );
-    }
+  static async viewProductSupplierList(searchTerm) {
+    return Product.findAll({
+      where: {
+        [Op.or]: [
+          { name: { [Op.iLike]: `%${searchTerm}%` } },
+          { product_code: { [Op.iLike]: `%${searchTerm}%` } }
+        ]
+      },
+      include: {
+        model: Supplier,
+        attributes: ['name'],
+      }
+    });
   }
+}
+
 module.exports = EnhancedProductService;
+
+
+// // services/ProductService.js
+// class EnhancedProductService {
+//     static async searchProducts(searchTerm) {
+//       return db.any(
+//         `SELECT p.*, s.name as supplier_name 
+//          FROM product p
+//          LEFT JOIN supplier s ON p.supplier_id = s.id
+//          WHERE p.name ILIKE $1 OR p.product_code ILIKE $1`,
+//         [`%${searchTerm}%`]
+//       );
+//     }
+//   }
+// module.exports = EnhancedProductService;
+
 
 
 /*// report.service.js

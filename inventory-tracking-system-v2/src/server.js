@@ -19,7 +19,7 @@ const SupplierRoutes = require('./routes/SupplierRoutes');
 const UserRoutes = require('./routes/UserRoutes');
 const StoreStockRoutes = require('./routes/StoreStockRoutes');
 const AuthController = require('./controllers/AuthController');
-
+const ReportRoutes = require('./routes/ReportRoutes');
 // Rate Limiter
 const rateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -46,7 +46,7 @@ app.use('/stores', authorize(['admin', 'store-manager']), StoreRoutes);
 app.use('/suppliers', authorize(['admin', 'supplier']), SupplierRoutes);
 app.use('/users', authorize(['admin']), UserRoutes);
 app.use('/store-stock', authorize(['admin', 'store-manager', 'analytics']), StoreStockRoutes);
-
+app.use('/report',authorize(['analytics']),ReportRoutes)
 // ---------- ERROR HANDLER ----------
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -57,6 +57,6 @@ app.listen(PORT, (err) => {
   if (err) {
     console.error(`Error starting server: ${err.message}`);
   } else {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
+    console.log(`Server running on http://localhost:${PORT}`);
   }
 });
