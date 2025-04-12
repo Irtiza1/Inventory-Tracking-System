@@ -1,6 +1,6 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../db/database'); 
-const Supplier = require('../models/SupplierModel'); 
+const Supplier = require('./SupplierModel'); 
 const Product = sequelize.define('Product', {
   id: {
     type: DataTypes.INTEGER,

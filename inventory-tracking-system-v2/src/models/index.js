@@ -4,7 +4,7 @@ const Store = require('./StoreModel');
 const Supplier = require('./SupplierModel');
 const UserAccount = require('./UserModel');
 const StoreStock = require('./StoreStockModel');
-
+const AuditLog = require('./AuditLogModel'); 
 module.exports = {
   Product,
   StockMovement,
@@ -12,4 +12,5 @@ module.exports = {
   Supplier,
   UserAccount,
   StoreStock,
+  AuditLog, 
 };
