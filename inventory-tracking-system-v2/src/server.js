@@ -11,7 +11,6 @@ const PORT = process.env.PORT || 3000;
 
 const { authenticate, authorize } = require('./middleware/AuthMiddleware');
 
-// Routes
 const ProductRoutes = require('./routes/ProductRoutes');
 const StockMovementRoutes = require('./routes/StockMovementRoutes');
 const StoreRoutes = require('./routes/StoreRoutes');
@@ -20,12 +19,7 @@ const UserRoutes = require('./routes/UserRoutes');
 const StoreStockRoutes = require('./routes/StoreStockRoutes');
 const AuthController = require('./controllers/AuthController');
 const ReportRoutes = require('./routes/ReportRoutes');
-// Rate Limiter
-const rateLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  message: 'Too many requests from this IP, please try again later.',
-});
+const rateLimiter = require('./middleware/RateLimiterMiddleware');
 
 app.use(rateLimiter);
 app.use(cors());
@@ -34,12 +28,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // ---------- PUBLIC ROUTE ----------
-app.post('/login', AuthController.login); // No authentication required
+app.post('/login', AuthController.login); 
 
 // ---------- AUTHENTICATED ROUTES ----------
 app.use(authenticate);
 
-// Role-based routing
+//---------- Role-based routing ----------
 app.use('/products', authorize(['admin', 'store-manager']), ProductRoutes);
 app.use('/stock', authorize(['admin', 'store-manager']), StockMovementRoutes);
 app.use('/stores', authorize(['admin', 'store-manager']), StoreRoutes);

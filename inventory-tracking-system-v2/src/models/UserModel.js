@@ -1,7 +1,6 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../db/database'); // Import sequelize instance
+const sequelize = require('../db/database'); 
 
-// Define the UserAccount model
 const UserAccount = sequelize.define('UserAccount', {
   id: {
     type: DataTypes.INTEGER,
@@ -37,19 +36,15 @@ const UserAccount = sequelize.define('UserAccount', {
     defaultValue: DataTypes.NOW
   }
 }, {
-  tableName: 'useraccount', // The name of the table in the database
-  timestamps: false, // Disable automatic creation of 'created_at' and 'updated_at'
-  underscored: true, // Use snake_case for column names
+  tableName: 'useraccount', 
+  timestamps: false, 
+  underscored: true, 
 });
 
-// Define the associations (if needed)
 UserAccount.associate = models => {
-  // A user can belong to one store (optional) and one supplier (optional)
   UserAccount.belongsTo(models.Store, { foreignKey: 'store_id', onDelete: 'SET NULL' });
   UserAccount.belongsTo(models.Supplier, { foreignKey: 'supplier_id', onDelete: 'SET NULL' });
 };
-
-// Static methods to replicate the behavior of the original model
 
 UserAccount.createUser = async (user) => {
   return UserAccount.create({
@@ -88,51 +83,17 @@ UserAccount.updateUser = async (id, user) => {
     },
     {
       where: { id },
-      returning: true, // Return the updated record
+      returning: true, 
     }
   );
-  return updatedUser[1][0]; // Return the updated user
+  return updatedUser[1][0]; 
 };
 
 UserAccount.deleteUser = async (id) => {
   const deletedCount = await UserAccount.destroy({
     where: { id }
   });
-  return deletedCount; // Returns the number of rows affected (deleted)
+  return deletedCount; 
 };
 
 module.exports = UserAccount;
-
-
-// const db = require('../db/database');
-
-// const User = {
-//   create: async (user) => {
-//     return db.one(
-//       `INSERT INTO UserAccount (username, password_hash, role, store_id, supplier_id)
-//        VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-//       [user.username, user.password_hash, user.role, user.store_id, user.supplier_id]
-//     );
-//   },
-//   findAll: async () => {
-//     return db.any('SELECT * FROM UserAccount');
-//   },
-//   findById: async (id) => {
-//     return db.oneOrNone('SELECT * FROM UserAccount WHERE id = $1', [id]);
-//   },
-//   findByUsername: async (username) => {
-//     return db.oneOrNone('SELECT * FROM UserAccount WHERE username = $1', [username]);
-//   },
-//   update: async (id, user) => {
-//     return db.oneOrNone(
-//       `UPDATE UserAccount SET username = $1, password_hash = $2, role = $3, store_id = $4, supplier_id = $5
-//        WHERE id = $6 RETURNING *`,
-//       [user.username, user.password_hash, user.role, user.store_id, user.supplier_id, id]
-//     );
-//   },
-//   delete: async (id) => {
-//     return db.result('DELETE FROM UserAccount WHERE id = $1', [id], r => r.rowCount);
-//   },
-// };
-
-// module.exports = User;

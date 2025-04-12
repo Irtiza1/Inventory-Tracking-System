@@ -39,12 +39,11 @@ const StoreStock = sequelize.define('StoreStock', {
   indexes: [
     {
       unique: true,
-      fields: ['store_id', 'product_id'],  // Ensure store-product uniqueness
+      fields: ['store_id', 'product_id'], 
     },
   ],
 });
 
-// Associations
 StoreStock.belongsTo(Store, { foreignKey: 'store_id' });
 StoreStock.belongsTo(Product, { foreignKey: 'product_id' });
 
@@ -78,17 +77,16 @@ StoreStock.updateQuantity = async (storeId, productId, quantity) => {
         store_id: storeId,
         product_id: productId,
       },
-      returning: true, // To return the updated record
+      returning: true,
     }
   );
-  return updatedStock[1][0]; // Return the updated record from the result
+  return updatedStock[1][0];
 };
 
 StoreStock.StockAdjustment = async (productId, movement) => {
   const quantity = movement.quantity;
   let updatedQuantity;
 
-  // Fetch current stock first
   const storeStock = await StoreStock.findOne({
     where: {
       store_id: movement.store_id,
@@ -108,7 +106,6 @@ StoreStock.StockAdjustment = async (productId, movement) => {
     throw new Error("Invalid movement type");
   }
 
-  // Perform the update
   const updatedStock = await StoreStock.update(
     { quantity: updatedQuantity, updated_at: Sequelize.NOW },
     {
@@ -119,7 +116,7 @@ StoreStock.StockAdjustment = async (productId, movement) => {
       returning: true,
     }
   );
-  return updatedStock[1][0]; // Return the updated record from the result
+  return updatedStock[1][0]; 
 };
 
 StoreStock.deleteStoreStock = async (storeId, productId) => {
@@ -129,123 +126,6 @@ StoreStock.deleteStoreStock = async (storeId, productId) => {
       product_id: productId,
     },
   });
-  return deletedCount; // Returns the number of rows affected (deleted)
+  return deletedCount; 
 };
 module.exports = StoreStock;
-
-// second option
-// const db = require('../db/database');
-
-// const StoreStock = {
-//   findAll: async (t = db) => {
-//     return t.any('SELECT * FROM storestock');
-//   },
-
-//   findByStoreAndProduct: async (storeId, productId, t = db) => {
-//     return t.oneOrNone(
-//       'SELECT * FROM storestock WHERE store_id = $1 AND product_id = $2',
-//       [storeId, productId]
-//     );
-//   },
-// /*StockAdjustment updated */
-//   StockAdjustment: async (product_id, movement, t = db) => {
-//     const quantity = movement.quantity; 
-//     if (movement.movement_type === 'stock-in') {
-//       return t.oneOrNone(
-//         `UPDATE storestock 
-//         SET quantity = quantity + $1, updated_at = CURRENT_TIMESTAMP 
-//         WHERE store_id = $2 AND product_id = $3 
-//         RETURNING *`,
-//         [quantity, movement.store_id, product_id]
-//       );
-//     }
-//     else if (movement.movement_type === 'sale') {
-//       return t.oneOrNone(
-//         `UPDATE storestock 
-//         SET quantity = quantity - $1, updated_at = CURRENT_TIMESTAMP 
-//         WHERE store_id = $2 AND product_id = $3 
-//         RETURNING *`,
-//         [quantity, movement.store_id, product_id]
-//       );
-//     }
-//     else if (movement.movement_type === 'manual-removal') {
-//       return t.oneOrNone(
-//         `UPDATE storestock 
-//         SET quantity = quantity - $1, updated_at = CURRENT_TIMESTAMP 
-//         WHERE store_id = $2 AND product_id = $3 
-//         RETURNING *`,
-//         [quantity, movement.store_id, product_id]
-//       );
-//     }
-//     else {
-//       throw new Error("Invalid movement type");
-//     }
-//   },
-
-//   updateQuantity: async (storeId, productId, quantity, t = db) => {
-//     return t.oneOrNone(
-//       `UPDATE storestock 
-//        SET quantity = $1, updated_at = CURRENT_TIMESTAMP 
-//        WHERE store_id = $2 AND product_id = $3 
-//        RETURNING *`,
-//       [quantity, storeId, productId]
-//     );
-//   },
-
-//   create: async (product_id, stockData, t = db) => {
-//     return t.one(
-//       `INSERT INTO storestock (store_id, product_id, quantity)
-//        VALUES ($1, $2, $3)
-//        RETURNING *`,
-//       [stockData.store_id, product_id, stockData.quantity]
-//     );
-//   },
-// };
-
-// module.exports = StoreStock;
-
-
-// const db = require('../db/database');
-
-// const StoreStock = {
-//   findAll: async () => {
-//     return db.any('SELECT * FROM storestock');
-//   },
-//   /*look to search by store_id or store name */ 
-//   findByStoreAndProduct: async (storeId, productId) => {
-//     return db.oneOrNone(
-//       'SELECT * FROM storestock WHERE store_id = $1 AND product_id = $2',
-//       [storeId, productId]
-//     );
-//   },
-//   /*stockadjacement , can we replace with updateQuantity */
-//   StockAdjacement: async (storeId, productId, quantity) => {
-//     return db.oneOrNone(
-//       `UPDATE storestock 
-//        SET quantity = quantity + $1, updated_at = CURRENT_TIMESTAMP 
-//        WHERE store_id = $2 AND product_id = $3 
-//        RETURNING *`,
-//       [quantity, storeId, productId]
-//     );
-//   },
-//   updateQuantity: async (storeId, productId, quantity) => {
-//     return db.oneOrNone(
-//       `UPDATE storestock 
-//        SET quantity = $1, updated_at = CURRENT_TIMESTAMP 
-//        WHERE store_id = $2 AND product_id = $3 
-//        RETURNING *`,
-//       [quantity, storeId, productId]
-//     );
-//   },
-// /*look whether to keep it or not*/
-//   create: async ({ store_id, product_id, quantity }) => {
-//     return db.one(
-//       `INSERT INTO storestock (store_id, product_id, quantity)
-//        VALUES ($1, $2, $3)
-//        RETURNING *`,
-//       [store_id, product_id, quantity]
-//     );
-//   },
-// };
-
-// module.exports = StoreStock;

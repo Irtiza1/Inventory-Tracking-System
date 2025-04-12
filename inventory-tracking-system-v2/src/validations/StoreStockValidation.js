@@ -1,4 +1,3 @@
-// validations/StoreStockValidation.js
 const Joi = require('joi');
 
 const validateStoreStock = (stock) => {

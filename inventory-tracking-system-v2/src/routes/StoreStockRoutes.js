@@ -3,7 +3,6 @@ const router = express.Router();
 const StoreStockController = require('../controllers/StoreStockController');
 const { authenticate, authorize } = require('../middleware/AuthMiddleware');
 
-// Admin & store-manager access (example)
 router.get('/',  StoreStockController.getAllStock);
 router.get('/:storeId/:product_code', StoreStockController.getStock);
 router.put('/:storeId/:product_code', StoreStockController.updateStock);

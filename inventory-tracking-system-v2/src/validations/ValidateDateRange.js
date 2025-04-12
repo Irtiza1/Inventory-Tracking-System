@@ -1,6 +1,5 @@
 const Joi = require('joi');
 
-// Define Joi validation schema for Date Range
 const validateDateRange = (queryParams) => {
   const schema = Joi.object({
     startDate: Joi.date().iso().required().messages({
@@ -17,25 +16,3 @@ const validateDateRange = (queryParams) => {
 };
 
 module.exports = { validateDateRange };
-
-// const { query, validationResult } = require('express-validator');
-
-// const validateDateRange = [
-//   query('startDate')
-//     .exists().withMessage('startDate is required')
-//     .isISO8601().withMessage('startDate must be a valid date in YYYY-MM-DD format'),
-    
-//   query('endDate')
-//     .exists().withMessage('endDate is required')
-//     .isISO8601().withMessage('endDate must be a valid date in YYYY-MM-DD format'),
-
-//   (req, res, next) => {
-//     const errors = validationResult(req);
-//     if (!errors.isEmpty()) {
-//       return res.status(400).json({ errors: errors.array() });
-//     }
-//     next();
-//   }
-// ];
-
-// module.exports = validateDateRange;

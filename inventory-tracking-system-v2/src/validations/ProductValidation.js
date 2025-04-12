@@ -1,7 +1,5 @@
 const Joi = require('joi');
 
-// Define Joi validation schemas
-// console.log("4")
 const validateProduct = (product) => {
   const schema = Joi.object({
     name: Joi.string().trim().required().messages({
@@ -28,19 +26,3 @@ const validateProduct = (product) => {
 
 module.exports = { validateProduct };
 
-
-// const Joi = require('joi');
-
-// // Define Joi validation schemas
-// const validateProduct = (product) => {
-//   const schema = Joi.object({
-//     name: Joi.string().trim().required(),
-//     productCode: Joi.string().trim().required(),
-//     price: Joi.number().required(),
-//     initialQuantity: Joi.number().integer().min(0).required(),
-//   });
-
-//   return schema.validate(product);
-// };
-
-// module.exports = { validateProduct };

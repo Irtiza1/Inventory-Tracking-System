@@ -14,7 +14,6 @@ const StoreStockController = {
   getStock: async (req, res) => {
     const { storeId, product_code } = req.params;
     try {
-      /*product code to be fetched */
       const stock = await StoreStockService.getStock(storeId, product_code);
       if (!stock) return res.status(404).json({ error: 'Stock not found' });
       res.status(200).json(stock);
@@ -23,7 +22,6 @@ const StoreStockController = {
     }
   },
 
-  // inside updateStock
   updateStock: async (req, res) => {
     const { quantity } = req.body;
 
@@ -46,7 +44,6 @@ const StoreStockController = {
       res.status(500).json({ error: 'Failed to update stock quantity' });
     }
   },
-  /*stock adjustment : product_id, movement, */
   stockAdjustment: async (movement) => {
     const { quantity } = movement.quantity;
 

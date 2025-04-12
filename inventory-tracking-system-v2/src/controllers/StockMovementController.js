@@ -39,18 +39,6 @@ const StockMovementController = {
       res.status(500).json({ error: 'Failed to retrieve stock movement' });
     }
   },
-  // updateStockMovement: async (req, res) => {
-  //   const { error } = validateStockMovement(req.body);
-  //   if (error) return res.status(400).json({ error: error.details[0].message });
-
-  //   try {
-  //     const movement = await StockMovementService.updateStockMovement(req.params.id, req.body);
-  //     if (!movement) return res.status(404).json({ error: 'Stock movement not found' });
-  //     res.status(200).json(movement);
-  //   } catch (err) {
-  //     res.status(500).json({ error: 'Failed to update stock movement' });
-  //   }
-  // },
   deleteStockMovement: async (req, res) => {
     try {
       const deleted = await StockMovementService.deleteStockMovement(req.params.product_code);
