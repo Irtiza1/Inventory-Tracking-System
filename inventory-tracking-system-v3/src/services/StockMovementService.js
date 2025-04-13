@@ -3,13 +3,14 @@ const Product = require('../models/ProductModel');
 
 const StockMovementService = {
   createStockMovement: async (movementData) => {
+    const userId = req.user.id;
     try {
       const product = await Product.getIdByProductCode(movementData.product_code);
       if (!product) {
         throw new Error('Product not found');
       }
 
-      const newMovement = await StockMovement.recordMovement(product, movementData);
+      const newMovement = await StockMovement.recordMovement(product, {... movementData, userId});
       return newMovement;
     } catch (error) {
       console.error('Error creating stock movement:', error);
@@ -53,13 +54,14 @@ const StockMovementService = {
   },
 
   deleteStockMovement: async (product_code) => {
+    const userId = req.user.id;
     try {
       const product = await Product.getIdByProductCode(product_code);
       if (!product) {
         throw new Error('Product not found');
       }
 
-      const deletedCount = await StockMovement.deleteStock(product);
+      const deletedCount = await StockMovement.deleteStock(product,userId);
       return deletedCount;
     } catch (error) {
       console.error(`Error deleting stock movement for product_code "${product_code}":`, error);

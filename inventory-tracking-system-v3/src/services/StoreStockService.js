@@ -25,12 +25,13 @@ const StoreStockService = {
   },
 
   updateStockQuantity: async (storeId, product_code, quantity) => {
+    const userId = req.user.id;
     try {
       const product_id = await Product.getIdByProductCode(product_code);
       if (!product_id) {
         return { error: "Product not found" };
       }
-      return await StoreStock.updateQuantity(storeId, product_code, quantity);
+      return await StoreStock.updateQuantity(storeId, product_code, quantity, userId);
     } catch (error) {
       console.error(`Error updating stock quantity for store ${storeId} and product ${product_code}:`, error);
       throw new Error('Failed to update store stock quantity');
@@ -38,12 +39,13 @@ const StoreStockService = {
   },
 
   createStockEntry: async (stockDataproduct) => {
+    const userId = req.user.id;
     try {
       const product_id = await Product.getIdByProductCode(stockDataproduct.product_code);
       if (!product_id) {
         return { error: "Product not found" };
       }
-      return await StoreStock.createStoreStock(product_id, stockDataproduct);
+      return await StoreStock.createStoreStock(product_id, { ...stockDataproduct, user_id: userId });
     } catch (error) {
       console.error('Error creating store stock entry:', error);
       throw new Error('Failed to create store stock entry');
@@ -64,12 +66,13 @@ const StoreStockService = {
   },
 
   deleteStoreStock: async (storeId, product_code) => {
+    const userId = req.user.id;
     try {
       const product_id = await Product.getIdByProductCode(product_code);
       if (!product_id) {
         return { error: "Product not found" };
       }
-      return await StoreStock.deleteStoreStock(storeId, product_id);
+      return await StoreStock.deleteStoreStock(storeId, product_id,userId);
     } catch (error) {
       console.error(`Error deleting store stock for store ${storeId} and product ${product_code}:`, error);
       throw new Error('Failed to delete store stock');

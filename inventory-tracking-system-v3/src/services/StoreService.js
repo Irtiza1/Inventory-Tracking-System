@@ -2,8 +2,9 @@ const Store = require('../models/StoreModel');
 
 const StoreService = {
   createStore: async (storeDataproduct) => {
+    const userId = req.user.id;
     try {
-      return await Store.createStore(storeDataproduct);
+      return await Store.createStore(storeDataproduct,userId);
     } catch (error) {
       console.error('Error creating store:', error);
       throw new Error('Failed to create store');
@@ -29,8 +30,9 @@ const StoreService = {
   },
 
   updateStoreByIdOrName: async (idOrName, storeDataproduct) => {
+    const userId = req.user.id;
     try {
-      return await Store.updateByIdOrName(idOrName, storeDataproduct);
+      return await Store.updateByIdOrName(idOrName, storeDataproduct,userId);
     } catch (error) {
       console.error(`Error updating store with ID or name "${idOrName}":`, error);
       throw new Error('Failed to update store');
@@ -38,8 +40,9 @@ const StoreService = {
   },
 
   deleteStoreByIdOrName: async (idOrNameproduct) => {
+    const userId = req.user.id;
     try {
-      return await Store.deleteByIdOrName(idOrNameproduct);
+      return await Store.deleteByIdOrName(idOrNameproduct,userId);
     } catch (error) {
       console.error(`Error deleting store with ID or name "${idOrNameproduct}":`, error);
       throw new Error('Failed to delete store');

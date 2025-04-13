@@ -1,4 +1,4 @@
-const { Product, StoreStock, StockMovement } = require('../models');
+const { Product, StoreStock, StockMovement } = require('../db/index');
 const { Op, Sequelize } = require('sequelize');
 
 class ReportService {
