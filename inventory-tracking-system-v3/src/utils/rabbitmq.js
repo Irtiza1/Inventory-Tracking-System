@@ -7,7 +7,6 @@ async function setupRabbitMQ() {
   const connection = await amqp.connect(RABBITMQ_URL);
   channel = await connection.createChannel();
   
-  // Assert queues
   await channel.assertQueue('audit_logs', { durable: true });
   await channel.assertQueue('audit_logs_bulk', { durable: true });
   

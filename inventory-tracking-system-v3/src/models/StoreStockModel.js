@@ -72,7 +72,6 @@ const StoreStock = writeSequelize.define('StoreStock', {
   }
 });
 
-// Associations
 StoreStock.associate = (models) => {
   StoreStock.belongsTo(Store, { 
     foreignKey: 'store_id',
@@ -87,7 +86,6 @@ StoreStock.associate = (models) => {
   });
 };
 
-// Class Methods
 StoreStock.createStoreStock = async (productId, stockData, userId, options = {}) => {
   try {
     options.userId = userId;
@@ -107,7 +105,6 @@ StoreStock.createStoreStock = async (productId, stockData, userId, options = {})
 
 StoreStock.findAllStoreStocks = async (options = {}) => {
   try {
-    // Try cache first
     const cached = await redis.get('stocks:all');
     if (cached) return JSON.parse(cached);
 
@@ -119,7 +116,6 @@ StoreStock.findAllStoreStocks = async (options = {}) => {
       ...options
     });
     
-    // Cache result
     if (stocks.length > 0) {
       await redis.set('stocks:all', JSON.stringify(stocks), 'EX', 300);
     }
@@ -246,7 +242,6 @@ StoreStock.deleteStoreStock = async (storeId, productId, userId, options = {}) =
   try {
     options.userId = userId;
     
-    // Soft delete first to trigger hooks
     await StoreStock.update(
       { deletedBy: userId },
       { 
@@ -273,156 +268,3 @@ StoreStock.deleteStoreStock = async (storeId, productId, userId, options = {}) =
 };
 
 module.exports = StoreStock;
-
-// const { Sequelize, DataTypes } = require('sequelize');
-// const sequelize = require('../db/database');
-// const Store = require('../models/StoreModel');
-// const Product = require('../models/ProductModel');
-
-// const StoreStock = sequelize.define('StoreStock', {
-//   id: {
-//     type: DataTypes.INTEGER,
-//     primaryKey: true,
-//     autoIncrement: true,
-//   },
-//   store_id: {
-//     type: DataTypes.INTEGER,
-//     allowNull: false,
-//     references: {
-//       model: Store,
-//       key: 'id',
-//     },
-//   },
-//   product_id: {
-//     type: DataTypes.INTEGER,
-//     allowNull: false,
-//     references: {
-//       model: Product,
-//       key: 'id',
-//     },
-//   },
-//   quantity: {
-//     type: DataTypes.INTEGER,
-//     defaultValue: 0,
-//   },
-//   updated_at: {
-//     type: DataTypes.DATE,
-//     defaultValue: Sequelize.NOW,
-//   },
-//   createdBy: DataTypes.INTEGER,
-//   updatedBy: DataTypes.INTEGER,
-//   deletedBy: DataTypes.INTEGER,
-// }, {
-//   tableName: 'storestock',
-//   timestamps: false,
-//   paranoid: true,
-//   indexes: [
-//     {
-//       unique: true,
-//       fields: ['store_id', 'product_id'], 
-//     },
-//   ],
-// });
-
-// StoreStock.belongsTo(Store, { foreignKey: 'store_id' });
-// StoreStock.belongsTo(Product, { foreignKey: 'product_id' });
-
-
-// StoreStock.createStoreStock = async (productId, stockData,userId) => {
-//   return StoreStock.create({
-//     store_id: stockData.store_id,
-//     product_id: productId,
-//     quantity: stockData.quantity,
-//     createdBy: userId,
-//     updatedBy: userId
-//   });
-// };
-
-// StoreStock.findAllStoreStocks = async () => {
-//   return StoreStock.findAll();
-// };
-
-// StoreStock.findByStoreAndProduct = async (storeId, productId) => {
-//   return StoreStock.findOne({
-//     where: {
-//       store_id: storeId,
-//       product_id: productId,
-//     },
-//   });
-// };
-
-// StoreStock.updateQuantity = async (storeId, productId, quantity, userId) => {
-//   const updatedStock = await StoreStock.update(
-//     {
-//       quantity,
-//       updated_at: Sequelize.NOW,
-//       updatedBy: userId
-//     },
-//     {
-//       where: {
-//         store_id: storeId,
-//         product_id: productId,
-//       },
-//       returning: true,
-//     }
-//   );
-//   return updatedStock[1][0];
-// };
-
-// StoreStock.StockAdjustment = async (productId, movement) => {
-//   const quantity = movement.quantity;
-//   let updatedQuantity;
-
-//   const storeStock = await StoreStock.findOne({
-//     where: {
-//       store_id: movement.store_id,
-//       product_id: productId,
-//     },
-//   });
-
-//   if (!storeStock) {
-//     throw new Error('StoreStock not found');
-//   }
-
-//   if (movement.movement_type === 'stock-in') {
-//     updatedQuantity = storeStock.quantity + quantity;
-//   } else if (movement.movement_type === 'sale' || movement.movement_type === 'manual-removal') {
-//     updatedQuantity = storeStock.quantity - quantity;
-//   } else {
-//     throw new Error("Invalid movement type");
-//   }
-
-//   const updatedStock = await StoreStock.update(
-//     {
-//       quantity: updatedQuantity,
-//       updated_at: Sequelize.NOW,
-//       updatedBy: userId
-//     },
-//     {
-//       where: {
-//         store_id: movement.store_id,
-//         product_id: productId,
-//       },
-//       returning: true,
-//     }
-//   );
-//   return updatedStock[1][0]; 
-// };
-
-
-// StoreStock.deleteStoreStock = async (storeId, productId, userId) => {
-//   await StoreStock.update(
-//     { deletedBy: userId },
-//     { where: { store_id: storeId, product_id: productId } }
-//   );
-//   return StoreStock.destroy({
-//     where: {
-//       store_id: storeId,
-//       product_id: productId,
-//     },
-//   });
-// };
-// StoreStock.belongsTo(Store, { foreignKey: 'store_id', onDelete: 'CASCADE' });
-// StoreStock.belongsTo(Product, { foreignKey: 'product_id', onDelete: 'CASCADE' });
-
-// module.exports = StoreStock;

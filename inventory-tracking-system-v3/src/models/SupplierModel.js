@@ -92,7 +92,6 @@ const Supplier = writeSequelize.define('Supplier', {
   }
 });
 
-// Class Methods
 Supplier.createSupplier = async (supplierData, userId, options = {}) => {
   options.userId = userId;
   const supplier = await Supplier.create({
@@ -104,13 +103,11 @@ Supplier.createSupplier = async (supplierData, userId, options = {}) => {
 };
 
 Supplier.findAllSuppliers = async (options = {}) => {
-  // Try cache first
   const cached = await redis.get('suppliers:all');
   if (cached) return JSON.parse(cached);
 
   const suppliers = await Supplier.findAll(options);
   
-  // Cache result
   if (suppliers.length > 0) {
     await redis.set('suppliers:all', JSON.stringify(suppliers), 'EX', 300);
   }
@@ -119,7 +116,6 @@ Supplier.findAllSuppliers = async (options = {}) => {
 };
 
 Supplier.findById = async (id, options = {}) => {
-  // Try cache first
   const cached = await redis.get(`supplier:${id}`);
   if (cached) return JSON.parse(cached);
 
@@ -155,7 +151,6 @@ Supplier.updateSupplier = async (id, supplierData, userId, options = {}) => {
 Supplier.deleteSupplier = async (id, userId, options = {}) => {
   options.userId = userId;
   
-  // Soft delete first to trigger hooks
   await Supplier.update(
     { deletedBy: userId },
     { where: { id }, ...options }
@@ -185,78 +180,3 @@ Supplier.deleteSupplier = async (id, userId, options = {}) => {
 // };
 
 module.exports = Supplier;
-
-
-// const { DataTypes, Sequelize } = require('sequelize');
-// const sequelize = require('../db/database'); 
-
-// const Supplier = sequelize.define('Supplier', {
-//   id: {
-//     type: DataTypes.INTEGER,
-//     primaryKey: true,
-//     autoIncrement: true
-//   },
-//   name: {
-//     type: DataTypes.STRING(255),
-//     allowNull: false
-//   },
-//   contact_info: {
-//     type: DataTypes.TEXT,
-//     allowNull: true
-//   },
-//   createdBy: DataTypes.INTEGER,
-//   updatedBy: DataTypes.INTEGER,
-//   deletedBy: DataTypes.INTEGER,
-// }, {
-//   tableName: 'supplier',
-//   timestamps: false, 
-//   underscored: true, 
-//   paranoid: true
-// });
-
-
-// Supplier.associate = models => {
-//   Supplier.hasMany(models.Product, { foreignKey: 'supplier_id', onDelete: 'SET NULL' });
-//   Supplier.hasMany(models.UserAccount, { foreignKey: 'supplier_id', onDelete: 'SET NULL' });
-// };
-
-
-// Supplier.createSupplier = async (supplier) => {
-//   return Supplier.create({
-//     name: supplier.name,
-//     contact_info: supplier.contact_info
-//   });
-// };
-
-// Supplier.findAllSuppliers = async () => {
-//   return Supplier.findAll();
-// };
-
-// Supplier.findById = async (id) => {
-//   return Supplier.findOne({
-//     where: { id }
-//   });
-// };
-
-// Supplier.updateSupplier = async (id, supplier) => {
-//   const updatedSupplier = await Supplier.update(
-//     {
-//       name: supplier.name,
-//       contact_info: supplier.contact_info
-//     },
-//     {
-//       where: { id },
-//       returning: true, 
-//     }
-//   );
-//   return updatedSupplier[1][0]; 
-// };
-
-// Supplier.deleteSupplier = async (id) => {
-//   const deletedCount = await Supplier.destroy({
-//     where: { id }
-//   });
-//   return deletedCount; 
-// };
-
-// module.exports = Supplier;

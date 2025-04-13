@@ -53,7 +53,6 @@ const Store = writeSequelize.define('Store', {
   }
 });
 
-// Class Methods
 Store.createStore = async (storeData, userId, options = {}) => {
   try {
     options.userId = userId;
@@ -71,13 +70,11 @@ Store.createStore = async (storeData, userId, options = {}) => {
 
 Store.findAllStores = async (options = {}) => {
   try {
-    // Try cache first
     const cached = await redis.get('stores:all');
     if (cached) return JSON.parse(cached);
 
     const stores = await Store.findAll(options);
     
-    // Cache result
     if (stores.length > 0) {
       await redis.set('stores:all', JSON.stringify(stores), 'EX', 300);
     }
@@ -96,7 +93,6 @@ Store.findByIdOrName = async ({ id, name }, options = {}) => {
 
     let store;
     if (id) {
-      // Try cache first
       const cached = await redis.get(`store:${id}`);
       if (cached) return JSON.parse(cached);
 
@@ -173,7 +169,6 @@ Store.deleteByIdOrName = async ({ id, name }, userId, options = {}) => {
       throw new Error('Either id or name must be provided');
     }
 
-    // Soft delete first to trigger hooks
     await Store.update(
       { deletedBy: userId },
       { where: whereClause, ...options }
@@ -199,120 +194,3 @@ Store.deleteByIdOrName = async ({ id, name }, userId, options = {}) => {
 // };
 
 module.exports = Store;
-
-// const { Sequelize, DataTypes } = require('sequelize');
-// const sequelize = require('../db/database');
-
-// const Store = sequelize.define('Store', {
-//   id: {
-//     type: DataTypes.INTEGER,
-//     primaryKey: true,
-//     autoIncrement: true
-//   },
-//   name: {
-//     type: DataTypes.STRING,
-//     allowNull: false
-//   },
-//   location: {
-//     type: DataTypes.STRING,
-//   },
-//   createdBy: DataTypes.INTEGER,
-//   updatedBy: DataTypes.INTEGER,
-//   deletedBy: DataTypes.INTEGER,
-
-// }, {
-//   tableName: 'store',
-//   timestamps: false,
-//   paranoid: true
-// });
-
-
-// Store.createStore = async (store, userId) => {
-//    try{ 
-//     const newStore = await Store.create({
-//       name: store.name,
-//       location: store.location,
-//       createdBy: userId,
-//       updatedBy: userId
-//     });
-//     return newStore;
-//   }
-//   catch(error){
-//     throw new Error('Error creating store: ' + error.message);
-//   }
-// };
-
-// Store.findAllStores = async () => {
-//   try {
-//     const stores = await Store.findAll();
-//     return stores;
-//   } catch (error) {
-//     throw new Error('Error retrieving stores: ' + error.message);
-//   }
-// };
-
-// Store.findByIdOrName = async ({ id, name }) => {
-//   try {
-//     if (!id && !name) {
-//       throw new Error('Either id or name must be provided');
-//     }
-
-//     let store;
-//     if (id) {
-//       store = await Store.findOne({ where: { id } });
-//     } else if (name) {
-//       store = await Store.findOne({ where: { name } });
-//     }
-
-//     return store;
-//   } catch (error) {
-//     throw new Error('Error finding store by id or name: ' + error.message);
-//   }
-// };
-
-// Store.updateByIdOrName = async ({ id, name }, store,userId) => {
-//   try {
-//     const dataToUpdate = {
-//       name: store.name,
-//       location: store.location,
-//       updatedBy: userId
-//     };
-//     if (!id && !name) {
-//       throw new Error('Either id or name must be provided');
-//     }
-
-//     let updatedStore;
-//     if (id) {
-//       updatedStore = await Store.update(
-//         { name: store.name, location: store.location },
-//         { where: { id }, returning: true }
-//       );
-//     } else if (name) {
-//       updatedStore = await Store.update(
-//         { name: store.name, location: store.location },
-//         { where: { name }, returning: true }
-//       );
-//     }
-
-//     if (updatedStore[0] === 0) {
-//       throw new Error('Store not found');
-//     }
-
-//     return updatedStore[1][0]; 
-//   } catch (error) {
-//     throw new Error('Error updating store: ' + error.message);
-//   }
-// };
-
-// Store.deleteByIdOrName = async ({ id, name }, userId) => {
-//   if (id) {
-//     await Store.update({ deletedBy: userId }, { where: { id } });
-//   } else if (name) {
-//     await Store.update({ deletedBy: userId }, { where: { name } });
-//   }
-
-//   // Then destroy
-//   return Store.destroy({ where: { id, name } });
-// };
-
-// module.exports = Store;
