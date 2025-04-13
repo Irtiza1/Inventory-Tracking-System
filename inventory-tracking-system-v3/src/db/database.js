@@ -1,7 +1,5 @@
-// db/database.js
 const { Sequelize } = require('sequelize');
 
-// Use environment variables or fallback to defaults
 const DB_CONFIG = {
   host: process.env.DB_HOST || 'localhost',
   port: process.env.DB_PORT || 5432,
@@ -10,41 +8,101 @@ const DB_CONFIG = {
   database: process.env.DB_NAME || 'postgres'
 };
 
-const writeSequelize = new Sequelize({
-  dialect: 'postgres',
-  ...DB_CONFIG,
-  logging: process.env.NODE_ENV === 'development' ? console.log : false,
-  pool: { max: 10, min: 0, acquire: 30000, idle: 10000 }
-});
+let writeSequelize, readSequelize;
 
-const readSequelize = new Sequelize({
-  dialect: 'postgres',
-  ...DB_CONFIG,
-  logging: false,
-  pool: { max: 20, min: 0, acquire: 30000, idle: 10000 }
-});
+function setupDatabases() {
+  if (!writeSequelize) { 
+    writeSequelize = new Sequelize({
+      dialect: 'postgres',
+      ...DB_CONFIG,
+      logging: process.env.NODE_ENV === 'development' ? console.log : false,
+      pool: { max: 15, min: 5, acquire: 30000, idle: 10000 }
+    });
 
-// Test connections
-(async () => {
+    readSequelize = new Sequelize({
+      dialect: 'postgres',
+      ...DB_CONFIG,
+      logging: false,
+      pool: { max: 20, min: 5, acquire: 30000, idle: 10000 }
+    });
+
+    console.log('Database connections created (shared across workers)');
+  }
+}
+
+async function testConnections() {
   try {
     await writeSequelize.authenticate();
-    console.log('Write connection established');
     await readSequelize.authenticate();
-    console.log('Read connection established');
+    console.log('Database connections verified');
   } catch (error) {
     console.error('Database connection error:', error);
-    process.exit(1); // Exit if connection fails
+    process.exit(1);
   }
-})();
+}
+
+setupDatabases();
 
 module.exports = {
-  sequelize: writeSequelize,
-  writeSequelize,
-  readSequelize,
-  Sequelize,
+  setupDatabases,
+  testConnections,
+  get sequelize() { return writeSequelize; },
+  get writeSequelize() { return writeSequelize; },
+  get readSequelize() { return readSequelize; },
   REDIS_URL: process.env.REDIS_URL || 'redis://localhost:6379',
   RABBITMQ_URL: process.env.RABBITMQ_URL || 'amqp://localhost'
 };
+
+// const { Sequelize } = require('sequelize');
+
+// // Use environment variables or fallback to defaults
+// const DB_CONFIG = {
+//   host: process.env.DB_HOST || 'localhost',
+//   port: process.env.DB_PORT || 5432,
+//   username: process.env.DB_USER || 'postgres',
+//   password: process.env.DB_PASSWORD || 'user123',
+//   database: process.env.DB_NAME || 'postgres'
+// };
+
+// const writeSequelize = new Sequelize({
+//   dialect: 'postgres',
+//   ...DB_CONFIG,
+//   logging: process.env.NODE_ENV === 'development' ? console.log : false,
+//   pool: { max: 10, min: 0, acquire: 30000, idle: 10000 }
+// });
+
+// const readSequelize = new Sequelize({
+//   dialect: 'postgres',
+//   ...DB_CONFIG,
+//   logging: false,
+//   pool: { max: 20, min: 0, acquire: 30000, idle: 10000 }
+// });
+
+// // Test connections
+// (async () => {
+//   try {
+//     await writeSequelize.authenticate();
+//     console.log('Write connection established');
+//     await readSequelize.authenticate();
+//     console.log('Read connection established');
+//   } catch (error) {
+//     console.error('Database connection error:', error);
+//     process.exit(1); // Exit if connection fails
+//   }
+// })();
+
+// module.exports = {
+//   sequelize: writeSequelize,
+//   writeSequelize,
+//   readSequelize,
+//   Sequelize,
+//   REDIS_URL: process.env.REDIS_URL || 'redis://localhost:6379',
+//   RABBITMQ_URL: process.env.RABBITMQ_URL || 'amqp://localhost'
+// };
+
+
+
+
 
 // const { Sequelize } = require('sequelize');
 
