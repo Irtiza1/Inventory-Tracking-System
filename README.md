@@ -238,6 +238,7 @@ We used a simple MVC architecture with Node.js/Express and local storage (SQLite
 The MVP demonstrates core CRUD operations and basic stock movement tracking. It lays the foundation for future scalability.
 
 - **ERD Diagram:**
+  
 ![Alt Text](/ERD-V1.png)
 
 ---
@@ -254,6 +255,10 @@ Expand the system to support 500+ stores with a central product catalog and stor
 - **Outcome:**  
 The system now supports multiple stores, allowing each store to manage its own inventory while sharing a central product catalog. This version sets the stage for further scaling and complexity.
 
+- **ERD Diagram:**
+
+![Alt Text](/ERD-V2.png)  
+
 ---
 
 #### Version 3 : Large‑Scale, Audited, Real‑Time System
@@ -268,6 +273,10 @@ Evolve the solution to support thousands of stores, enable near‑real‑time st
 
 - **Outcome:**
 The final system is robust, scalable, and capable of handling high concurrency while ensuring real‑time stock updates and full traceability of user actions. This evolution meets Bazaar Technologies’ requirements for performance, reliability, and auditability in a dynamic retail environment.
+
+- **ERD Diagram:**
+
+![Alt Text](/ERD-V3.png)  
 
 ---
 
