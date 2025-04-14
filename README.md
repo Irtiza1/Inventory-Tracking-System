@@ -289,6 +289,11 @@ The final system is robust, scalable, and capable of handling high concurrency w
 
 ![Alt Text](/ERD-V3.jpeg)  
 
+
+
+- **Architectural Diagram:**
+  
+![Alt Text](/v3-arch.png)
 ---
 
 ## 5. Improvements for the Future
