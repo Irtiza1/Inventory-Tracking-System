@@ -237,6 +237,9 @@ We used a simple MVC architecture with Node.js/Express and local storage (SQLite
 - **Outcome:**  
 The MVP demonstrates core CRUD operations and basic stock movement tracking. It lays the foundation for future scalability.
 
+- **ERD Diagram:**
+![Alt Text](relative/path/to/ERD-V1.png)
+
 ---
 
 #### Version 2 : Multi‑Store, Multi‑Supplier Model
