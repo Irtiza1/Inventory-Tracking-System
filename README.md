@@ -265,3 +265,39 @@ Evolve the solution to support thousands of stores, enable near‑real‑time st
 
 - **Outcome:**
 The final system is robust, scalable, and capable of handling high concurrency while ensuring real‑time stock updates and full traceability of user actions. This evolution meets Bazaar Technologies’ requirements for performance, reliability, and auditability in a dynamic retail environment.
+
+---
+
+## 5. Improvements for the Future
+
+As we continue to scale the Inventory Tracking System, there are several key areas where improvements can be made to further enhance the functionality, security, and performance of the system.
+
+### a) Microservices Architecture
+- **Description**: As the system grows in terms of complexity and size, breaking down the monolithic architecture into microservices will help manage different parts of the system more efficiently. This will allow for independent scaling of components like inventory management, stock movement, and reporting.
+- **Benefit**: Improved maintainability, scalability, and deployment flexibility.
+
+### b) Real-Time Notifications
+- **Description**: Implement a notification system that alerts store managers and suppliers in real-time about critical events like low stock levels, expired products, or order fulfillment issues.
+- **Benefit**: Proactive management of inventory, better decision-making, and reduced stockouts.
+
+### g) Enhanced Security Features
+- **Description**: Incorporate advanced security features such as two-factor authentication (2FA) for users, encryption for sensitive data, and enhanced monitoring for suspicious activity.
+- **Benefit**: Increased security and protection of sensitive inventory and user data.
+
+### h) Advanced Reporting and Analytics
+- **Description**: Implement advanced analytics and reporting features, such as predictive analysis and custom dashboards, to give managers deeper insights into inventory trends, sales patterns, and performance.
+- **Benefit**: More data-driven decision-making and improved business intelligence.
+
+### i) Supplier Management Enhancements
+- **Description**: Extend the supplier management system by allowing suppliers to manage their own products and stock levels. Suppliers could have their own login and dashboard to interact with the system.
+- **Benefit**: Streamlined operations between stores and suppliers, reducing manual work and improving communication.
+
+### j) Integration with ERP Systems
+- **Description**: Integrate the system with popular ERP (Enterprise Resource Planning) solutions to provide a seamless flow of data between the inventory system and financial systems.
+- **Benefit**: Better coordination between inventory management and financial planning, leading to a more synchronized operation.
+
+### k) Improved Load Balancing & Failover Mechanisms
+- **Description**: Enhance the load balancing strategy to ensure even more efficient distribution of traffic across servers and implement failover mechanisms to ensure the system remains available even in the event of server failures.
+- **Benefit**: Increased reliability and uptime, especially during high transaction volumes.
+
+---
