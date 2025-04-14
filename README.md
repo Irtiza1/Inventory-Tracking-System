@@ -241,6 +241,12 @@ The MVP demonstrates core CRUD operations and basic stock movement tracking. It 
   
 ![Alt Text](/ERD-V1.png)
 
+
+
+- **Architectural Diagram:**
+  
+![Alt Text](/v1-arch.png)
+
 ---
 
 #### Version 2 : Multi‑Store, Multi‑Supplier Model
@@ -259,6 +265,11 @@ The system now supports multiple stores, allowing each store to manage its own i
 
 ![Alt Text](/ERD-V2.png)  
 
+
+
+- **Architectural Diagram:**
+  
+![Alt Text](/v2-arch.png)
 ---
 
 #### Version 3 : Large‑Scale, Audited, Real‑Time System
