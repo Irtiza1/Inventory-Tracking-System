@@ -329,3 +329,12 @@ As we continue to scale the Inventory Tracking System, there are several key are
 - **Benefit**: Increased reliability and uptime, especially during high transaction volumes.
 
 ---
+
+### Stage 1: 
+https://github.com/Irtiza1/Inventory-Tracking-System/tree/Stage1-version
+
+### Stage 2: 
+https://github.com/Irtiza1/Inventory-Tracking-System/tree/Stage2-version
+
+### Stage 3: 
+https://github.com/Irtiza1/Inventory-Tracking-System/tree/Stage3-version
