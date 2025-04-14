@@ -70,7 +70,7 @@ We containerized the application using a process manager (PM2) and introduced a 
   - Reliability & Compliance: Horizontal scaling and robust audit logging ensure the system remains reliable, secure, and compliant with regulatory standards.
   - Future‑Proofing: Read/write separation and event‑driven design allow the system to evolve further as transaction volumes grow.
 
-- **Design Decisions & Trade-offs:**
+#### Design Decisions & Trade-offs:
 
 | **Component / Decision**            | **Why It Was Added**                                 | **Benefits**                                               | **Trade-offs**                                                                 |
 |------------------------------------|------------------------------------------------------|------------------------------------------------------------|---------------------------------------------------------------------------------|
