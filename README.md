@@ -70,6 +70,19 @@ We containerized the application using a process manager (PM2) and introduced a 
   - Reliability & Compliance: Horizontal scaling and robust audit logging ensure the system remains reliable, secure, and compliant with regulatory standards.
   - Future‑Proofing: Read/write separation and event‑driven design allow the system to evolve further as transaction volumes grow.
 
+## 🧠 Stage 3 Architecture — Design Decisions & Trade-offs
+
+| **Component / Decision**            | **Why It Was Added**                                 | **Benefits**                                               | **Trade-offs**                                                                 |
+|------------------------------------|------------------------------------------------------|------------------------------------------------------------|---------------------------------------------------------------------------------|
+| **Load Balancer + Horizontal Scaling** | Handle high traffic and distribute load              | High availability, scalability, fault tolerance            | Infrastructure becomes more complex; load balancer adds cost                   |
+| **Primary-Replica PostgreSQL**     | Separate reads from writes to optimize DB performance | Improved read performance, reduced write contention        | Need to manage replication lag and consistency                                 |
+| **RabbitMQ/Kafka (Message Queue)** | Decouple services and enable asynchronous workflows  | Scalable event-driven system, fault tolerance              | Increases system complexity and eventual consistency delays                    |
+| **Redis Cache**                    | Speed up repeated queries and reduce DB load         | Fast response times, reduced latency                       | Cache invalidation can be tricky; adds memory overhead                         |
+| **Audit Logging Service**          | Track and store actions securely and independently   | Secure, centralized, and scalable logging                  | More microservices to maintain and monitor                                     |
+| **WebSocket Server**               | Enable real-time updates to clients                  | Real-time UI/UX, live sync                                 | Adds stateful connections and deployment complexity                            |
+| **Health & Monitoring**            | Detect system failures early and enable observability| Easier debugging, alerts, uptime assurance                 | Setup and tuning required; monitoring tools add overhead                       |
+
+
 ---
 
 ## 2. Assumptions
